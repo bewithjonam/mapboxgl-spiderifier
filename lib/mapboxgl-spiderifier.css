@@ -2,7 +2,7 @@
   width: 40px;
   height: 40px;
   left: -20px;
-  right: -20px;
+  top: -20px;
 }
 .marker .line-div {
   position: absolute;

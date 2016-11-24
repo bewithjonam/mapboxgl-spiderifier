@@ -28,9 +28,7 @@
         spiderfier = new MapboxglSpiderfier(map, {
           onClick: function(e, marker){
             console.log(marker);
-          },
-          markerWidth: 40,
-          markerHeight: 40,
+          }
         });
         
       map.on('style.load', function() {
@@ -74,7 +72,7 @@
           //remove old spiderfy
           return;
         } else {
-          spiderfier.spiderfy(e.lngLat, _.map(_.range(numberOfSpiderifiedMarkers), function(index) {
+          spiderfier.spiderfy(features[0].geometry.coordinates, _.map(_.range(numberOfSpiderifiedMarkers), function(index) {
             return {id: index};
           }));
         }
