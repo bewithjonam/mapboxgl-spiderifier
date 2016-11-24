@@ -1,0 +1,36 @@
+.marker{
+  width: 40px;
+  height: 40px;
+  left: -20px;
+  right: -20px;
+}
+.marker .line-div {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  width: 2px;
+  background-color: red;
+  transform-origin: bottom;
+  z-index: 0;
+}
+
+.marker .icon-div{
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-image: url(https://placekitten.com/g/40/40);
+  opacity: 0.6;
+}
+
+.marker:hover {
+  cursor: pointer;
+}
+
+.marker:hover .line-div {
+  background-color: green;
+}
+
+.marker:hover .icon-div {
+  opacity: 1;
+}
