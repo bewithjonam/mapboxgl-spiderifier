@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <script type="text/javascript" src=" https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.js"></script>
+  <script type="text/javascript" src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.28.0/mapbox-gl.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.28.0/mapbox-gl.css">
+  <link rel="stylesheet" type="text/css" href="lib/mapboxgl-spiderfier.js">
+  <link rel="stylesheet" type="text/css" href="lib/mapboxgl-spiderfier.css">
+  <title>Basic mapbox gl spiderfy</title>
+  <style type="text/css">
+    #map {
+      width: 100%;
+      height: 300px;
+    }
+  </style>
+  <script type="text/javascript">
+    window.onload=function(){
+      mapboxgl.accessToken = 'pk.eyJ1Ijoic29jcmF0YSIsImEiOiJjaXJxc2wzam0waGU5ZmZtODhqd2ttamdxIn0.1ZQEByXoDD7fGIa9lUHIqg';
+      var map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v9',
+          center: [-74.50, 40],
+          zoom: 9
+        }),
+        spiderfier = new Spiderfier(map, {
+          onClick: function(e, marker){
+            console.log(marker);
+          },
+          markerWidth: 40,
+          markerHeight: 40,
+        });
+        
+      map.on('style.load', function() {
+        map.addSource('circle', {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [{
+              type: 'feature',
+              properties: {
+                color: '#ab3412'
+              },
+              geometry: {
+                type: 'Point',
+                coordinates: [-74.50, 40]
+              }
+            }]
+          }
+        });
+
+        map.addLayer({
+          'id': 'circle',
+          'type': 'circle',
+          'source': 'circle',
+          'paint': {
+            'circle-radius': 30,
+            'circle-color': '#288DC1',
+            'circle-opacity': 0.8
+          },
+        });
+        map.on('mousemove', mouseMove);
+        map.on('click', mouseClick);
+      });
+
+      function mouseClick(e) {
+        var features = map.queryRenderedFeatures(e.point, {
+            layers: ['circle']
+          }),
+          numberOfSpiderifiedMarkers = _.random(5, 30);
+        if (!features.length) {
+          //remove old spiderfy
+          return;
+        } else {
+          spiderfier.spiderfy(e.lngLat, _.map(_.range(numberOfSpiderifiedMarkers), function(index) {
+            return {id: index};
+          }));
+        }
+      }
+
+      function mouseMove(e) {
+        var features = map.queryRenderedFeatures(e.point, {
+          layers: ['circle']
+        });
+        map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
+      }
+    }
+  </script>
+</head>
+<body>
+  Click on the blue circle for spiderified markers. On every click, different number of markers will load.
+  <div id="map"></div>
+</body>
+</html>
