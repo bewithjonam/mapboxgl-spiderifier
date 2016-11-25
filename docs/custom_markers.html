@@ -39,7 +39,7 @@
           container: 'map',
           style: 'mapbox://styles/mapbox/streets-v9',
           center: [-74.50, 40],
-          zoom: 9
+          zoom: 7
         }),
         spiderfier = new MapboxglSpiderfier(map, {
           onClick: function(e, marker){
@@ -68,16 +68,26 @@
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: [{
-              type: 'feature',
-              properties: {
-                color: '#ab3412'
-              },
+            features: [
+              {type: 'feature',
+              properties: {count: 6},
               geometry: {
                 type: 'Point',
                 coordinates: [-74.50, 40]
-              }
-            }]
+              }},
+              {type: 'feature',
+              properties: {count: 20},
+              geometry: {
+                type: 'Point',
+                coordinates: [-75.50, 40.5]
+              }},
+              {type: 'feature',
+              properties: {count: 50},
+              geometry: {
+                type: 'Point',
+                coordinates: [-76.0, 39.5]
+              }}
+            ]
           }
         });
 
@@ -106,7 +116,8 @@
           //remove old spiderfy
           return;
         } else {
-          markers = _.map(_.range(numberOfSpiderifiedMarkers), randomMarker);
+          count = features[0].properties.count
+          markers = _.map(_.range(count), randomMarker);
           spiderfier.spiderfy(features[0].geometry.coordinates, markers);
         }
       }
@@ -129,7 +140,7 @@
     </div>
   </nav>
   <div class="container" style="margin-top: 100px;">
-    <p>Click on the blue circle for spiderified markers. On every click, different number of markers will load.</p>
+    <p>Click on any blue circle for spiderified markers. On every click, different number of markers will load.</p>
     <div id="map"></div>
   </div>
 </body>
