@@ -11,7 +11,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.js"></script>
   <script type="text/javascript" src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.28.0/mapbox-gl.js"></script>
   <script type="text/javascript" src="../lib/mapboxgl-spiderifier.js"></script>
-  <title>Mapbox gl spiderfier Basic Example</title>
+  <title>Mapbox gl spiderfier Custom markers</title>
   <style type="text/css">
     #map {
       width: 100%;
@@ -19,11 +19,17 @@
     }
     .spidered-marker .icon-div{
       position: relative;
-      width: 25px;
-      height: 41px;
-      margin-left: -11px;
-      margin-top: -39px;
-      background-image: url(https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/images/marker-icon.png);
+      width: 40px;
+      height: 40px;
+      margin-left: -20px;
+      margin-top: -20px;
+      font-size: 20px;
+    }
+    .spidered-marker:not(:hover) .icon-div .circle-icon{
+      color: white;
+    }
+    .spidered-marker:hover .icon-div .type-icon{
+      color: white;
     }
   </style>
   <script type="text/javascript">
@@ -38,8 +44,24 @@
         spiderfier = new MapboxglSpiderfier(map, {
           onClick: function(e, marker){
             console.log(marker);
+          },
+          initializeMarker: function(markerElem, marker){
+            markerElem.className = markerElem.className + ' fa-stack fa-lg';
+            markerElem.innerHTML = '<i class="circle-icon fa fa-circle fa-stack-2x"></i>' +
+                                    '<i class="type-icon fa fa-' + marker.type + ' fa-stack-1x"></i>'
+            markerElem.style.color = marker.color;
           }
-        });
+        }),
+        iconTypes = ['car', 'bicycle', 'bus', 'cab', 'truck', 'train', 'rocket', 'ship'],
+        iconColors = ['red', 'blue', 'green', 'orange', '#ab1234', '#112312'];
+      
+      function randomMarker(index){
+        return {
+          id: index,
+          type: _.sample(iconTypes),
+          color: _.sample(iconColors)
+        }
+      };
         
       map.on('style.load', function() {
         map.addSource('circle', {
@@ -84,9 +106,7 @@
           //remove old spiderfy
           return;
         } else {
-          markers = _.map(_.range(numberOfSpiderifiedMarkers), function(index) {
-            return {id: index};
-          });
+          markers = _.map(_.range(numberOfSpiderifiedMarkers), randomMarker);
           spiderfier.spiderfy(features[0].geometry.coordinates, markers);
         }
       }
