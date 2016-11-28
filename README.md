@@ -3,10 +3,7 @@ Spiderify markers on mapbox-gl using marker overlays. Note it does not create th
 
 Spiral/Circle positioning logic taken from and credits goes to https://github.com/jawj/OverlappingMarkerSpiderfier.
 
-## Sample: 
- - https://bewithjonam.github.io/mapboxgl-spiderifier/docs/sample.html
-
-## All Examples:
+## Examples:
  - https://bewithjonam.github.io/mapboxgl-spiderifier/docs/index.html
 
 ## Usage:

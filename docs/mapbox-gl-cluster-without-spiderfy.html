@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.28.0/mapbox-gl.css">
+  <link rel="stylesheet" type="text/css" href="../lib/mapboxgl-spiderifier.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.js"></script>
+  <script type="text/javascript" src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.28.0/mapbox-gl.js"></script>
+  <script type="text/javascript" src="../lib/mapboxgl-spiderifier.js"></script>
+  <title>Mapbox gl clustering without spiderfying</title>
+  <style type="text/css">
+    #map {
+      width: 100%;
+      height: 500px;
+    }
+    .spidered-marker .icon-div{
+      position: relative;
+      width: 22px;
+      height: 22px;
+      margin-left: -8px;
+      margin-top: -18px;
+      background-image: url(https://api.mapbox.com/styles/v1/mapbox/dark-v9/sprite.png?access_token=pk.eyJ1Ijoic29jcmF0YSIsImEiOiJjaXJxc2wzam0waGU5ZmZtODhqd2ttamdxIn0.1ZQEByXoDD7fGIa9lUHIqg);
+      background-position: -110px -110px;  
+    }
+    .spidered-marker .line-div{
+      background-color: #f4f4f4;
+    }
+    .spidered-marker:hover .line-div {
+      background-color: #f404f4;
+    }
+
+  </style>
+  <script type="text/javascript">
+    window.onload=function(){
+      mapboxgl.accessToken = 'pk.eyJ1Ijoic29jcmF0YSIsImEiOiJjaXJxc2wzam0waGU5ZmZtODhqd2ttamdxIn0.1ZQEByXoDD7fGIa9lUHIqg';
+      var mapCenter = [-74.50, 40],
+        map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/dark-v9',
+          center: mapCenter,
+          zoom: 7
+        }),
+        // spiderfier = new MapboxglSpiderfier(map, {}),
+        SPIDERFY_FROM_ZOOM = 10,
+        features = _.map(_.range(10000), function(index){
+          return {
+            type: 'feature',
+            properties: {id: index},
+            geometry: {
+              type: 'Point',
+              coordinates: [mapCenter[0] + (_.random(1000) * 0.001), mapCenter[1] + (_.random(1000) * 0.001)]
+            }
+          }
+        }),
+        markerIdMarkerMap = {};
+
+      _.each(features, function(marker){
+        markerIdMarkerMap[marker.properties.id] = marker;
+      });
+      
+      function randomMarker(index){
+        return {
+          id: index,
+          type: _.sample(iconTypes),
+          color: _.sample(iconColors)
+        }
+      };
+        
+      map.on('style.load', function() {
+        map.addSource('pins', {
+          type: 'geojson',
+          cluster: true,
+          clusterRadius: 50,
+          clusterMaxZoom: 25,
+          // trackPointsInClusterByPropertyField: 'id',
+          // trackPointsInClusterFromZoom: SPIDERFY_FROM_ZOOM,
+          data: {
+            type: 'FeatureCollection',
+            features: features
+          }
+        });
+
+        map.addLayer({
+          'id': 'pins',
+          'type': 'symbol',
+          'source': 'pins',
+          'layout': {
+            "icon-image": "marker-15"
+          },
+          'filter': ['all',['!has', 'point_count']]
+        });
+
+        map.addLayer({
+          'id': 'cluster-pins',
+          'type': 'circle',
+          'source': 'pins',
+          'filter': ['all', ['has', 'point_count']],
+          'paint': {
+            'circle-color': {
+              type: 'interval',
+              property: "point_count",
+              stops: [
+                [0, '#51bbd6'],
+                [20, '#f1f075'],
+                [150, '#f28cb1']
+              ]
+            },
+            'circle-radius': 18
+          }
+        });
+
+        map.addLayer({
+          'id': 'cluster-pins-count',
+          'type': 'symbol',
+          'source': 'pins',
+          'layout': {
+            'text-field': '{point_count}',
+            'text-font': [
+              'DIN Offc Pro Medium',
+              'Arial Unicode MS Bold'
+            ],
+            'text-size': 12
+          }
+        });
+        map.on('mousemove', mouseMove);
+        map.on('click', mouseClick);
+        map.on('zoomstart', function(){
+          //spiderfier.unspiderfy();
+          setZoomInfoText();
+        });
+        setZoomInfoText();
+      });
+
+      function setZoomInfoText(){
+        document.getElementById('zoomvalue').innerHTML = map.getZoom();
+        document.getElementById('zoombehavior').innerHTML = (map.getZoom() < SPIDERFY_FROM_ZOOM) ?  'zoom' : 'none';
+      }
+
+      function mouseClick(e) {
+        var features = map.queryRenderedFeatures(e.point, {
+            layers: ['cluster-pins']
+          });
+
+        spiderfier.unspiderfy();
+        if (!features.length) {
+          return;
+        } else if (map.getZoom() < SPIDERFY_FROM_ZOOM) {
+          map.easeTo({center: e.lngLat, zoom: map.getZoom() + 2});
+        } else {
+          //spiderfy(features[0].geometry.coordinates, features[0].properties.includedPoints);
+        }
+      }
+
+      // function spiderfy(lngLat, markerIdsString){
+      //   var markerIds = JSON.parse(markerIdsString),
+      //     markers = _.chain(markerIds)
+      //       .map(function(markerId){
+      //         var marker = markerIdMarkerMap[markerId];
+      //         if(_.isUndefined(marker)){
+      //           console.warn('marker not found for marker id: ' + markerId);
+      //         }
+      //         return markerIdMarkerMap[markerId];
+      //       })
+      //       .compact()
+      //       .value();
+        
+      //   spiderfier.spiderfy(lngLat, markers);
+      // }
+
+      function mouseMove(e) {
+        var features = map.queryRenderedFeatures(e.point, {
+          layers: ['cluster-pins']
+        });
+        map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
+      }
+    }
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">MapboxglSpiderifier</a>
+      </div>
+    </div>
+  </nav>
+  <div class="container" style="margin-top: 100px;">
+    <p>Without forked version of mapboxjs and without spiderfying. To compare performance with <a href="./mapbox-gl-cluster-spiderfy.html">forked-spiderfy version</a>.</p>
+    <div class="alert alert-info">
+      Current zoom is <strong id="zoomvalue"></strong>.
+      On cluster click, behavior is <strong class="" id="zoombehavior"></strong>.
+    </div><br/>
+    <div id="map"></div>
+  </div>
+</body>
+</html>
