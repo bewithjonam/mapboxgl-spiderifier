@@ -15,8 +15,8 @@ var map = new mapboxgl.Map({
     zoom: 9
   }),
   spiderfier = new MapboxglSpiderfier(map, {
-  	onClick: function(e, marker){
-    	console.log(marker);
+  	onClick: function(e, options){
+    	console.log(options.marker);
     },
     markerWidth: 40,
     markerHeight: 40,
@@ -43,7 +43,7 @@ new MapboxglSpiderfier(map, options)
   * options
     - markerWidth: number
     - markerHeight: number
-    - onClick: function(clickEvent, markerObject, markerElement)
+    - onClick: function(clickEvent, options)
     
 ```js
   spiderfier.spiderfy(latLng, markerArray);
