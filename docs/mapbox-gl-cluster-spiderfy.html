@@ -55,20 +55,7 @@
               coordinates: [mapCenter[0] + (_.random(1000) * 0.001), mapCenter[1] + (_.random(1000) * 0.001)]
             }
           }
-        }),
-        markerIdMarkerMap = {};
-
-      _.each(features, function(marker){
-        markerIdMarkerMap[marker.properties.id] = marker;
-      });
-      
-      function randomMarker(index){
-        return {
-          id: index,
-          type: _.sample(iconTypes),
-          color: _.sample(iconColors)
-        }
-      };
+        });
         
       map.on('style.load', function() {
         map.addSource('pins', {
@@ -76,8 +63,6 @@
           cluster: true,
           clusterRadius: 50,
           clusterMaxZoom: 25,
-          trackPointsInClusterByPropertyField: 'id',
-          trackPointsInClusterFromZoom: SPIDERFY_FROM_ZOOM,
           data: {
             type: 'FeatureCollection',
             features: features
@@ -151,24 +136,13 @@
         } else if (map.getZoom() < SPIDERFY_FROM_ZOOM) {
           map.easeTo({center: e.lngLat, zoom: map.getZoom() + 2});
         } else {
-          spiderfy(features[0].geometry.coordinates, features[0].properties.includedPoints);
+          map.getSource('pins').getClusterChildren(features[0].properties.cluster_id, Math.floor(map.getZoom()), true, function(data){
+            var markers = _.map(data.children, function(child){
+              return child.properties;
+            });
+            spiderfier.spiderfy(features[0].geometry.coordinates, markers);
+          });
         }
-      }
-
-      function spiderfy(lngLat, markerIdsString){
-        var markerIds = JSON.parse(markerIdsString),
-          markers = _.chain(markerIds)
-            .map(function(markerId){
-              var marker = markerIdMarkerMap[markerId];
-              if(_.isUndefined(marker)){
-                console.warn('marker not found for marker id: ' + markerId);
-              }
-              return markerIdMarkerMap[markerId];
-            })
-            .compact()
-            .value();
-        
-        spiderfier.spiderfy(lngLat, markers);
       }
 
       function mouseMove(e) {
@@ -189,15 +163,9 @@
     </div>
   </nav>
   <div class="container" style="margin-top: 100px;">
-    <p>Mapbox js/css built from fork <a href="https://github.com/bewithjonam/mapbox-gl-js">https://github.com/bewithjonam/mapbox-gl-js</a>. 
-      It uses supercluster fork <a href="github.com/bewithjonam/supercluster">github.com/bewithjonam/supercluster</a> (sent a pull request for it).
-      This mapbox-gl-js for passes over two additional params to supercluster included within mapbox-gl-js.
-      <ol>
-        <li>trackPointsInClusterByPropertyField</li>
-        <li>trackPointsInClusterFromZoom</li>
-      </ol>
+    <p>Mapbox js/css built from fork <a href="https://github.com/bewithjonam/mapbox-gl-js">https://github.com/bewithjonam/mapbox-gl-js</a>. Uses super cluster <a href="https://github.com/mapbox/supercluster/pull/31">merged PR</a>.
     </p>
-    <p><strong>Exact replica of this <a href="./mapbox-gl-cluster-without-spiderfy.html">example without forked mapbox-gl-js and without spiderfy</a>, to compare with.</strong></p>
+    
     <p>Click on any cluster. On clicking the clusters, till zoom 15, map will zoom. From zoom 15, it will spiderfy.</p>
     <div class="alert alert-info">
       Current zoom is <strong id="zoomvalue"></strong>.
