@@ -2,18 +2,17 @@
   width: 1px;
   height: 1px;
   overflow: display;
+  -webkit-transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  -ms-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;  
 }
 
-.spidered-marker.animate .line-div {
-  -webkit-transition: height 0.25s ease-in-out;
-  -moz-transition: height 0.25s ease-in-out;
-  -ms-transition: height 0.25s ease-in-out;
-  -o-transition: height 0.25s ease-in-out;
-  transition: height 0.25s ease-in-out;
-}
-
-.spidered-marker.animate.initial .line-div{
-  height: 10px !important;
+.spidered-marker.initial {
+  margin-left: 0px !important;
+  margin-top: 0px !important;
+  height: 0px;
 }
 
 .spidered-marker .line-div {
