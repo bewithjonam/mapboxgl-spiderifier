@@ -36,6 +36,8 @@
           zoom: 7
         }),
         spiderfier = new MapboxglSpiderfier(map, {
+          animate: true,
+          speed: 200,
           onClick: function(e, marker){
             console.log(marker);
           }
