@@ -5,9 +5,28 @@
   will-change: transform;
 }
 
-.spidered-marker:hover {
-  cursor: pointer;
+.spidered-marker:hover { cursor: pointer }
+
+.spidered-marker .icon-div {
+  position: relative;
+  z-index: 1;
 }
+
+.spidered-marker .line-div {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background-color: #343434;
+  opacity: 0.45;
+  transform-origin: bottom;
+  z-index: 0;
+  height: 0;
+}
+
+.spidered-marker:hover .line-div { opacity: 1 }
+
+/* Animations specific styles */
 
 .spidered-marker.animate {
   -webkit-transition: margin 0.15s linear;
@@ -17,42 +36,26 @@
   transition: margin 0.15s linear;
 }
 
-.spidered-marker.initial {
-  margin-left: 0px !important;
-  margin-top: 0px !important;
-  height: 0px;
-}
-
-.spidered-marker .line-div {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 2px;
-  background-color: #343434;
-  opacity: 0.6;
-  transform-origin: bottom;
-  z-index: 0;
+.spidered-marker.initial,
+.spidered-marker.exit {
+  margin-left: 0 !important;
+  margin-top: 0 !important;
   height: 0;
 }
 
 .spidered-marker.animate .line-div {
-  -webkit-transition: height 0.35s ease-in, opacity 0.5s ease;
-  -moz-transition: height 0.35s ease-in, opacity 0.5s ease;
-  -ms-transition: height 0.35s ease-in, opacity 0.5s ease;
-  -o-transition: height 0.35s ease-in, opacity 0.5s ease;
-  transition: height 0.35s ease-in, opacity 0.5s ease;
+  -webkit-transition: all 0.15s linear;
+  -moz-transition: all 0.15s linear;
+  -ms-transition: all 0.15s linear;
+  -o-transition: all 0.15s linear;
+  transition: all 0.15s linear;
+
+  -webkit-transition-delay: inherit;
+  -moz-transition-delay: inherit;
+  -ms-transition-delay: inherit;
+  -o-transition-delay: inherit;
+  transition-delay: inherit;
 }
 
-.spidered-marker.animate.initial .line-div {
-  height: 0 !important;
-  opacity: 0;
-}
-
-.spidered-marker:hover .line-div {
-  opacity: 1;
-}
-
-.spidered-marker .icon-div {
-  position: relative;
-  z-index: 1;
-}
+.spidered-marker.animate.initial .line-div,
+.spidered-marker.animate.exit .line-div { height: 0 !important }
