@@ -44,6 +44,8 @@ new MapboxglSpiderfier(map, options)
     - markerWidth: number
     - markerHeight: number
     - onClick: function(clickEvent, options)
+    - animate: true|false
+    - animationSpeed: number in milliseconds (animation speed)
     
 ```js
   spiderfier.spiderfy(latLng, markerArray);
@@ -56,8 +58,3 @@ new MapboxglSpiderfier(map, options)
   spiderfier.unspiderfy();
 ```
   Unspiderfies markers, if any spiderfied already.
-  
-  
-## TODO:
-  * Ability for custom html marker for marker icons/text.
-  * Animation on spiderfy/unspiderfy

@@ -40,9 +40,11 @@
           container: 'map',
           style: 'mapbox://styles/mapbox/streets-v9',
           center: [-74.50, 40],
-          zoom: 7
+          zoom: 7,
         }),
         spiderfier = new MapboxglSpiderfier(map, {
+          animate: true,
+          animationSpeed: 200,
           onClick: function(e, marker){
             console.log(marker);
           },
