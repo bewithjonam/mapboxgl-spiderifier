@@ -1,40 +1,61 @@
-.spidered-marker{
+.spidered-marker {
   width: 1px;
   height: 1px;
   overflow: display;
-  -webkit-transition: all 0.25s ease-in-out;
-  -moz-transition: all 0.25s ease-in-out;
-  -ms-transition: all 0.25s ease-in-out;
-  -o-transition: all 0.25s ease-in-out;
-  transition: all 0.25s ease-in-out;  
+  will-change: transform;
 }
 
-.spidered-marker.initial {
-  margin-left: 0px !important;
-  margin-top: 0px !important;
-  height: 0px;
-}
+.spidered-marker:hover { cursor: pointer }
 
-.spidered-marker .line-div {
-  position: absolute;
-  bottom: 50%;
-  left: 50%;
-  width: 2px;
-  background-color: #343434;
-  opacity: 0.6;
-  transform-origin: bottom;
-  z-index: 0;
-}
-
-.spidered-marker .icon-div{
+.spidered-marker .icon-div {
   position: relative;
   z-index: 1;
 }
 
-.spidered-marker:hover {
-  cursor: pointer;
+.spidered-marker .line-div {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background-color: #343434;
+  opacity: 0.45;
+  transform-origin: bottom;
+  z-index: 0;
+  height: 0;
 }
 
-.spidered-marker:hover .line-div {
-  opacity: 1;
+.spidered-marker:hover .line-div { opacity: 1 }
+
+/* Animations specific styles */
+
+.spidered-marker.animate {
+  -webkit-transition: margin 0.15s linear;
+  -moz-transition: margin 0.15s linear;
+  -ms-transition: margin 0.15s linear;
+  -o-transition: margin 0.15s linear;
+  transition: margin 0.15s linear;
 }
+
+.spidered-marker.initial,
+.spidered-marker.exit {
+  margin-left: 0 !important;
+  margin-top: 0 !important;
+  height: 0;
+}
+
+.spidered-marker.animate .line-div {
+  -webkit-transition: all 0.15s linear;
+  -moz-transition: all 0.15s linear;
+  -ms-transition: all 0.15s linear;
+  -o-transition: all 0.15s linear;
+  transition: all 0.15s linear;
+
+  -webkit-transition-delay: inherit;
+  -moz-transition-delay: inherit;
+  -ms-transition-delay: inherit;
+  -o-transition-delay: inherit;
+  transition-delay: inherit;
+}
+
+.spidered-marker.animate.initial .line-div,
+.spidered-marker.animate.exit .line-div { height: 0 !important }
