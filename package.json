@@ -1,0 +1,23 @@
+{
+  "name": "mapboxgl-spiderifier",
+  "version": "1.0.0",
+  "description": "Spiderify markers on mapbox-gl using marker overlays. Note it does not create the spiderfication in the canvas but on a overlay on top of the canvas. This uses mapboxgl.Marker to create markers and spider legs.",
+  "main": "lib/mapboxgl-spiderifier.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mimio/mapboxgl-spiderifier.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mimio/mapboxgl-spiderifier/issues"
+  },
+  "homepage": "https://github.com/mimio/mapboxgl-spiderifier#readme"
+}
