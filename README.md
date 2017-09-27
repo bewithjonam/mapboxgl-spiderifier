@@ -1,4 +1,11 @@
+
+
 # mapboxgl-spiderifier
+
+**NOTE** this is not our library, simply publishing it via npm so we can consume it. if u want it back just hit us up
+mimio boyz for life
+
+
 Spiderify markers on mapbox-gl using marker overlays. Note it does not create the spiderfication in the canvas but on a overlay on top of the canvas. This uses mapboxgl.Marker to create markers and spider legs.
 
 Spiral/Circle positioning logic taken from and credits goes to https://github.com/jawj/OverlappingMarkerSpiderfier.
