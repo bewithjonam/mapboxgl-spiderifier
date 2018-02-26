@@ -192,4 +192,6 @@ spideifier.each (iterator) function.
   // | - .spider-leg-line
   // | - .spider-leg-pin
 
+  Moving ./lib/mapbox-gl-spiderifier.css to ./index.css
+  Moving ./lib/mapbox-gl-spiderifier.js to ./index.js
 ```
