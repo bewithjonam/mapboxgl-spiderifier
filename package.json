@@ -1,8 +1,9 @@
 {
-  "name": "@bewithjonam/mapboxgl-spiderifier",
-  "version": "1.0.6",
+  "name": "mapboxgl-spiderifier",
+  "version": "1.0.7",
   "description": "Spiderify markers on mapbox-gl using marker overlays.",
   "main": "lib/mapboxgl-spiderifier.js",
+  "style": "lib/mapboxgl-spiderifier.css",
   "directories": {
     "doc": "docs"
   },
