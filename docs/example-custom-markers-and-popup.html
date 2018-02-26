@@ -10,38 +10,86 @@
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.js"></script>
   <script type="text/javascript" src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.28.0/mapbox-gl.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="../lib/mapboxgl-spiderifier.js"></script>
-  <title>Mapbox gl spiderfier Basic Example</title>
+  <title>Mapbox gl spiderifier Custom markers</title>
   <style type="text/css">
     #map {
       width: 100%;
       height: 500px;
     }
-    .spidered-marker .icon-div{
+    .spider-leg-container .spider-leg-pin {
       position: relative;
-      width: 25px;
-      height: 41px;
-      margin-left: -11.5px;
-      margin-top: -38.5px;
-      background-image: url(https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/images/marker-icon.png);
+      width: 40px;
+      height: 40px;
+      margin-left: -20px;
+      margin-top: -20px;
+      font-size: 20px;
     }
+    .spider-leg-container .spider-leg-pin i.type-icon {
+      color: white;
+    }
+
   </style>
   <script type="text/javascript">
+    var iconTypes = ['car', 'bicycle', 'bus', 'cab', 'truck', 'train', 'rocket', 'ship'];
+    var iconColors = ['red', 'blue', 'green', 'orange', '#ab1234', '#112312'];
+    var randomMarker = function(index){
+      return {
+        id: index,
+        type: _.sample(iconTypes),
+        color: _.sample(iconColors)
+      }
+    };
+
+    mapboxgl.accessToken = 'pk.eyJ1Ijoic29jcmF0YSIsImEiOiJjaXJxc2wzam0waGU5ZmZtODhqd2ttamdxIn0.1ZQEByXoDD7fGIa9lUHIqg';
+
     window.onload=function(){
-      mapboxgl.accessToken = 'pk.eyJ1Ijoic29jcmF0YSIsImEiOiJjaXJxc2wzam0waGU5ZmZtODhqd2ttamdxIn0.1ZQEByXoDD7fGIa9lUHIqg';
       var map = new mapboxgl.Map({
-          container: 'map',
-          style: 'mapbox://styles/mapbox/streets-v9',
-          center: [-74.50, 40],
-          zoom: 7
-        }),
-        spiderfier = new MapboxglSpiderfier(map, {
-          animate: true,
-          animationSpeed: 200,
-          onClick: function(e, marker){
-            console.log(marker);
-          }
-        });
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v9',
+        center: [-74.50, 40],
+        zoom: 7,
+      });
+      var spiderifier = new MapboxglSpiderifier(map, {
+        animate: true,
+        animationSpeed: 200,
+        customPin: true,
+        onClick: function(e, spiderLeg){
+          console.log(spiderLeg);
+        },
+        initializeLeg: initializeSpiderLeg
+      });
+
+      function initializeSpiderLeg(spiderLeg){
+        var pinElem = spiderLeg.elements.pin;
+        var feature = spiderLeg.feature;
+        var popup;
+
+        pinElem.className = pinElem.className + ' fa-stack fa-lg';
+        pinElem.innerHTML = '<i class="circle-icon fa fa-circle fa-stack-2x"></i>' +
+                                '<i class="type-icon fa fa-' + feature.type + ' fa-stack-1x"></i>'
+        pinElem.style.color = feature.color;
+
+        $(pinElem)
+          .on('mouseenter', function(){
+            popup = new mapboxgl.Popup({
+              closeButton: true,
+              closeOnClick: false,
+              offset: MapboxglSpiderifier.popupOffsetForSpiderLeg(spiderLeg)
+            });
+
+            popup.setHTML('Icon used is <b>fa-' + feature.type+'</b>')
+              .addTo(map)
+
+            spiderLeg.mapboxMarker.setPopup(popup);
+          })
+          .on('mouseleave', function(){
+            if(popup){
+              popup.remove();
+            }
+          });
+      }
 
       map.on('style.load', function() {
         map.addSource('circle', {
@@ -86,22 +134,18 @@
       });
 
       function mouseClick(e) {
-        var features = map.queryRenderedFeatures(e.point, {
-            layers: ['circle']
-          }),
-          count,
-          markers;
+        var clickedOnFeatures = map.queryRenderedFeatures(e.point, {
+          layers: ['circle']
+        });
 
-        if (!features.length) {
-          //remove old spiderfy
+        if (!clickedOnFeatures.length) {
+          spiderifier.unspiderfy();
           return;
-        } else {
-          count = features[0].properties.count
-          markers = _.map(_.range(count), function(index) {
-            return {id: index};
-          });
-          spiderfier.spiderfy(features[0].geometry.coordinates, markers);
         }
+
+        var clickedOnFeature = clickedOnFeatures[0];
+        var features = _.map(_.range(clickedOnFeature.properties.count), randomMarker);
+        spiderifier.spiderfy(clickedOnFeature.geometry.coordinates, features);
       }
 
       function mouseMove(e) {

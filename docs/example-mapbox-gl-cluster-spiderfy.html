@@ -17,19 +17,19 @@
       width: 100%;
       height: 500px;
     }
-    .spidered-marker .icon-div{
+    .spider-leg-container .spider-leg-pin{
       position: relative;
       width: 22px;
       height: 22px;
       margin-left: -8px;
       margin-top: -18px;
       background-image: url(https://api.mapbox.com/styles/v1/mapbox/dark-v9/sprite.png?access_token=pk.eyJ1Ijoic29jcmF0YSIsImEiOiJjaXJxc2wzam0waGU5ZmZtODhqd2ttamdxIn0.1ZQEByXoDD7fGIa9lUHIqg);
-      background-position: -110px -110px;  
+      background-position: -110px -110px;
     }
-    .spidered-marker .line-div{
+    .spider-leg-container .spider-leg-line {
       background-color: #f4f4f4;
     }
-    .spidered-marker:hover .line-div {
+    .spider-leg-container:hover .spider-leg-line {
       background-color: #f404f4;
     }
 
@@ -44,7 +44,9 @@
           center: mapCenter,
           zoom: 7
         }),
-        spiderfier = new MapboxglSpiderfier(map, {}),
+        spiderifier = new MapboxglSpiderifier(map, {
+          customPin: true
+        }),
         SPIDERFY_FROM_ZOOM = 10,
         features = _.map(_.range(10000), function(index){
           return {
@@ -56,7 +58,7 @@
             }
           }
         });
-        
+
       map.on('style.load', function() {
         map.addSource('pins', {
           type: 'geojson',
@@ -114,7 +116,7 @@
         map.on('mousemove', mouseMove);
         map.on('click', mouseClick);
         map.on('zoomstart', function(){
-          spiderfier.unspiderfy();
+          spiderifier.unspiderfy();
           setZoomInfoText();
         });
         setZoomInfoText();
@@ -130,7 +132,7 @@
             layers: ['cluster-pins']
           });
 
-        spiderfier.unspiderfy();
+        spiderifier.unspiderfy();
         if (!features.length) {
           return;
         } else if (map.getZoom() < SPIDERFY_FROM_ZOOM) {
@@ -140,7 +142,7 @@
             var markers = _.map(data.children, function(child){
               return child.properties;
             });
-            spiderfier.spiderfy(features[0].geometry.coordinates, markers);
+            spiderifier.spiderfy(features[0].geometry.coordinates, markers);
           });
         }
       }
@@ -165,7 +167,7 @@
   <div class="container" style="margin-top: 100px;">
     <p>Mapbox js/css built from fork <a href="https://github.com/bewithjonam/mapbox-gl-js">https://github.com/bewithjonam/mapbox-gl-js</a>. Uses super cluster <a href="https://github.com/mapbox/supercluster/pull/31">merged PR</a>.
     </p>
-    
+
     <p>Click on any cluster. On clicking the clusters, till zoom 15, map will zoom. From zoom 15, it will spiderfy.</p>
     <div class="alert alert-info">
       Current zoom is <strong id="zoomvalue"></strong>.

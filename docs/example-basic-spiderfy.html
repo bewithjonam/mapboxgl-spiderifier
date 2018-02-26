@@ -10,9 +10,8 @@
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.js"></script>
   <script type="text/javascript" src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.28.0/mapbox-gl.js"></script>
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="../lib/mapboxgl-spiderifier.js"></script>
-  <title>Mapbox gl spiderfier Custom markers</title>
+  <title>Mapbox gl spiderifier Basic Example</title>
   <style type="text/css">
     #map {
       width: 100%;
@@ -20,17 +19,11 @@
     }
     .spidered-marker .icon-div{
       position: relative;
-      width: 40px;
-      height: 40px;
-      margin-left: -20px;
-      margin-top: -20px;
-      font-size: 20px;
-    }
-    .spidered-marker:not(:hover) .icon-div .circle-icon{
-      color: white;
-    }
-    .spidered-marker:hover .icon-div .type-icon{
-      color: white;
+      width: 25px;
+      height: 41px;
+      margin-left: -11.5px;
+      margin-top: -38.5px;
+      background-image: url(https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/images/marker-icon.png);
     }
   </style>
   <script type="text/javascript">
@@ -40,77 +33,16 @@
           container: 'map',
           style: 'mapbox://styles/mapbox/streets-v9',
           center: [-74.50, 40],
-          zoom: 7,
+          zoom: 7
         }),
-        spiderfier = new MapboxglSpiderfier(map, {
+        spiderifier = new MapboxglSpiderifier(map, {
           animate: true,
           animationSpeed: 200,
           onClick: function(e, marker){
             console.log(marker);
-          },
-          initializeMarker: function(markerObject){
-            var markerElem = markerObject.elements.marker,
-              marker = markerObject.marker;
-
-            markerElem.className = markerElem.className + ' fa-stack fa-lg';
-            markerElem.innerHTML = '<i class="circle-icon fa fa-circle fa-stack-2x"></i>' +
-                                    '<i class="type-icon fa fa-' + marker.type + ' fa-stack-1x"></i>'
-            markerElem.style.color = marker.color;
-
-            $(markerElem)
-              .on('mouseenter', function(){
-                popupOverlay = createOverlay(markerObject);
-
-                popupOverlay.setHTML('Icon used is <b>fa-' + marker.type+'</b>')
-                  .addTo(map)
-                  
-                markerObject.mapboxMarker.setPopup(popupOverlay);
-              })
-              .on('mouseleave', function(){
-                if(popupOverlay){
-                  popupOverlay.remove();
-                }
-              });
           }
-        }),
-        iconTypes = ['car', 'bicycle', 'bus', 'cab', 'truck', 'train', 'rocket', 'ship'],
-        iconColors = ['red', 'blue', 'green', 'orange', '#ab1234', '#112312'];
-      
-      function randomMarker(index){
-        return {
-          id: index,
-          type: _.sample(iconTypes),
-          color: _.sample(iconColors)
-        }
-      };
-
-      function createOverlay(markerObject){
-        var offset = 10,
-          iconOffsetX = markerObject.spiderParam.x,
-          iconOffsetY = markerObject.spiderParam.y;
-
-        popupOverlay = new mapboxgl.Popup({
-          closeButton: true,
-          closeOnClick: false,
-          offset: {
-             'top': offsetVariant([0, offset], iconOffsetX, iconOffsetY),
-             'top-left': offsetVariant([offset,offset], iconOffsetX, iconOffsetY),
-             'top-right': offsetVariant([-offset,offset], iconOffsetX, iconOffsetY),
-             'bottom': offsetVariant([0, -offset], iconOffsetX, iconOffsetY),
-             'bottom-left': offsetVariant([offset, -offset], iconOffsetX, iconOffsetY),
-             'bottom-right': offsetVariant([-offset, -offset], iconOffsetX, iconOffsetY),
-             'left': offsetVariant([offset, -offset], iconOffsetX, iconOffsetY),
-             'right': offsetVariant([-offset, -offset], iconOffsetX, iconOffsetY)
-           }
         });
 
-        return popupOverlay;
-      };
-
-      function offsetVariant(offset, variantX, variantY) {
-        return [offset[0]+ (variantX || 0), offset[1]+ (variantY || 0)];
-      }
-        
       map.on('style.load', function() {
         map.addSource('circle', {
           type: 'geojson',
@@ -157,7 +89,7 @@
         var features = map.queryRenderedFeatures(e.point, {
             layers: ['circle']
           }),
-          numberOfSpiderifiedMarkers = _.random(5, 30),
+          count,
           markers;
 
         if (!features.length) {
@@ -165,8 +97,10 @@
           return;
         } else {
           count = features[0].properties.count
-          markers = _.map(_.range(count), randomMarker);
-          spiderfier.spiderfy(features[0].geometry.coordinates, markers);
+          markers = _.map(_.range(count), function(index) {
+            return {id: index};
+          });
+          spiderifier.spiderfy(features[0].geometry.coordinates, markers);
         }
       }
 
