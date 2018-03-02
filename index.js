@@ -1,9 +1,9 @@
 ;(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define(['MapboxglSpiderifier'], factory);
-  } else if (typeof exports === 'object') {
+  if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = factory(require('mapbox-gl'));
-  } else {
+  } else if (typeof define === 'function' && define.amd) {
+    define(['MapboxglSpiderifier'], factory);
+  } else  {
     root.MapboxglSpiderifier = factory(root.mapboxgl);
   }
 }(this, function(mapboxgl) {
