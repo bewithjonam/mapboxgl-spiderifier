@@ -16,11 +16,11 @@
       },
       NULL_FUNCTION = function () {},
       options = {
-        animate: !!userOptions.animate, // to animate the spiral
-        animationSpeed: userOptions.animationSpeed || 0, // animation speed in milliseconds
-        customPin: !!userOptions.customPin, // If false, sets a default icon for pins in spider legs.
-        initializeLeg: userOptions.initializeLeg || NULL_FUNCTION,
-        onClick: userOptions.onClick || NULL_FUNCTION,
+        animate: false, // to animate the spiral
+        animationSpeed: 0, // animation speed in milliseconds
+        customPin: false, // If false, sets a default icon for pins in spider legs.
+        initializeLeg: NULL_FUNCTION,
+        onClick: NULL_FUNCTION,
         // --- <SPIDER TUNING Params>
         // circleSpiralSwitchover: show spiral instead of circle from this marker count upwards
         //                        0 -> always spiral; Infinity -> always circle
@@ -33,6 +33,10 @@
       },
       twoPi = Math.PI * 2,
       previousSpiderLegs = [];
+
+    for (var attrname in userOptions) {
+      options[attrname] = userOptions[attrname];
+    }
 
     // Public:
     this.spiderfy = spiderfy;
