@@ -8,6 +8,7 @@
     "doc": "docs"
   },
   "scripts": {
+    "lint": "./node_modules/.bin/eslint index.js || true",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/mimio/mapboxgl-spiderifier/issues"
   },
-  "homepage": "https://github.com/mimio/mapboxgl-spiderifier#readme"
+  "homepage": "https://github.com/mimio/mapboxgl-spiderifier#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1"
+  }
 }

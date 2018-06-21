@@ -1,4 +1,4 @@
-;(function(root, factory) {
+(function(root, factory) {
   if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = factory(require('mapbox-gl'));
   } else if (typeof define === 'function' && define.amd) {
@@ -43,7 +43,7 @@
     this.unspiderfy = unspiderfy;
     this.each = function (callback) {
       util.each(previousSpiderLegs, callback);
-    }
+    };
 
     // Private:
     function spiderfy(latLng, features) {
@@ -91,7 +91,7 @@
       }
 
       previousSpiderLegs = spiderLegs;
-    };
+    }
 
     function unspiderfy() {
       util.each(previousSpiderLegs.reverse(), function (spiderLeg, index) {
@@ -116,7 +116,7 @@
       }
     }
 
-    function generateSpiralParams(count, centerPt) {
+    function generateSpiralParams(count) {
       var legLength = options.spiralLengthStart,
         angle = 0;
       return util.mapTimes(count, function (index) {
@@ -129,12 +129,12 @@
           legLength: legLength,
           index: index
         };
-        legLength = legLength + (twoPi * options.spiralLengthFactor / angle)
+        legLength = legLength + (twoPi * options.spiralLengthFactor / angle);
         return pt;
       });
     }
 
-    function generateCircleParams(count, centerPt) {
+    function generateCircleParams(count) {
       var circumference = options.circleFootSeparation * (2 + count),
         legLength = circumference / twoPi, // = radius from circumference
         angleStep = twoPi / count;
@@ -180,7 +180,7 @@
         return [];
       }
       for (i = 0; i < array.length; i++) {
-        iterator(array[i], i)
+        iterator(array[i], i);
       }
     }
 
@@ -188,7 +188,7 @@
       if (!count) {
         return [];
       }
-      for (i = 0; i < count; i++) {
+      for (var i = 0; i < count; i++) {
         iterator(i);
       }
     }
@@ -197,7 +197,7 @@
       var result = [];
       eachFn(array, function (item, i) {
         result.push(iterator(item, i));
-      })
+      });
       return result;
     }
 
@@ -219,20 +219,20 @@
 
     offset = offset || 0;
     return {
-       'top': offsetVariant([0, offset], pinOffsetX, pinOffsetY),
-       'top-left': offsetVariant([offset,offset], pinOffsetX, pinOffsetY),
-       'top-right': offsetVariant([-offset,offset], pinOffsetX, pinOffsetY),
-       'bottom': offsetVariant([0, -offset], pinOffsetX, pinOffsetY),
-       'bottom-left': offsetVariant([offset, -offset], pinOffsetX, pinOffsetY),
-       'bottom-right': offsetVariant([-offset, -offset], pinOffsetX, pinOffsetY),
-       'left': offsetVariant([offset, -offset], pinOffsetX, pinOffsetY),
-       'right': offsetVariant([-offset, -offset], pinOffsetX, pinOffsetY)
-    }
+      'top': offsetVariant([0, offset], pinOffsetX, pinOffsetY),
+      'top-left': offsetVariant([offset,offset], pinOffsetX, pinOffsetY),
+      'top-right': offsetVariant([-offset,offset], pinOffsetX, pinOffsetY),
+      'bottom': offsetVariant([0, -offset], pinOffsetX, pinOffsetY),
+      'bottom-left': offsetVariant([offset, -offset], pinOffsetX, pinOffsetY),
+      'bottom-right': offsetVariant([-offset, -offset], pinOffsetX, pinOffsetY),
+      'left': offsetVariant([offset, -offset], pinOffsetX, pinOffsetY),
+      'right': offsetVariant([-offset, -offset], pinOffsetX, pinOffsetY)
+    };
   };
 
   function offsetVariant(offset, variantX, variantY) {
     return [offset[0]+ (variantX || 0), offset[1]+ (variantY || 0)];
-  };
+  }
 
   return MapboxglSpiderifier;
 }));
