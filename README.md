@@ -7,10 +7,20 @@ Spiral/Circle positioning logic taken from and credits goes to https://github.co
 ## Examples:
  - https://bewithjonam.github.io/mapboxgl-spiderifier/docs/index.html
 
+## Note:
+Mapboxgl-js has exposed getClusterLeaves/getClusterChildren (from supercluster) in version [v0.47.0](https://github.com/mapbox/mapbox-gl-js/releases/tag/v0.47.0). Thereby, now we can get the features within a cluster from mapboxgl and spiderfy them using this library.
+
 ## Usage:
 
-#### Simple spiderfication
+#### Simple Spiderfication of features
 ```js
+var features = [
+  {id: 0, type: 'car', color: 'red'},
+  {id: 1, type: 'bicycle', color: '#ff00ff'},
+  {id: 2, type: 'bus', color: 'blue'},
+  {id: 3, type: 'cab', color: 'orange'},
+  {id: 4, type: 'train', color: 'red'}
+];
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v9',
@@ -27,20 +37,46 @@ var spiderifier = new MapboxglSpiderifier(map, {
   });
 
 map.on('style.load', function() {
-  var features = [
-    {id: 0, type: 'car', color: 'red'},
-    {id: 1, type: 'bicycle', color: '#ff00ff'},
-    {id: 2, type: 'bus', color: 'blue'},
-    {id: 3, type: 'cab', color: 'orange'},
-    {id: 4, type: 'train', color: 'red'}
-  ];
-
   spiderifier.spiderfy([-74.50, 40], features);
 });
 
 map.on('click', function(){
   spiderifier.unspiderfy();
 });
+```
+### Getting features in a cluster from mapboxgl and spiderfying them
+Refer [Example 3](https://bewithjonam.github.io/mapboxgl-spiderifier/docs/example-mapbox-gl-cluster-spiderfy.html)
+```
+map.on('style.load', function() {
+  map.on('click', mouseClick);
+});
+
+function mouseClick(e) {
+  var features = map.queryRenderedFeatures(e.point, {
+      layers: [<<id of the layer containing the cluster>>]
+    });
+
+  spiderifier.unspiderfy();
+  if (!features.length) {
+    return;
+  } else {
+    map.getSource(<<source Id of the source containing the cluster>>).getClusterLeaves(
+      features[0].properties.cluster_id,
+      100,
+      0,
+      function(err, leafFeatures){
+        if (err) {
+          return console.error('error while getting leaves of a cluster', err);
+        }
+        var markers = _.map(leafFeatures, function(leafFeature){
+          return leafFeature.properties;
+        });
+        spiderifier.spiderfy(features[0].geometry.coordinates, markers);
+      }
+    );
+  }
+}
+
 ```
 
 #### Custom Pins With popup:

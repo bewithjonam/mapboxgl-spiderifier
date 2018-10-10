@@ -5,11 +5,11 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="./mapbox-gl.css">
+  <link rel="stylesheet" type="text/css" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.css">
   <link rel="stylesheet" type="text/css" href="../index.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.js"></script>
-  <script type="text/javascript" src="./mapbox-gl.js"></script>
+  <script type="text/javascript" src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.js"></script>
   <script type="text/javascript" src="../index.js"></script>
   <title>Mapbox gl clustering and spiderfying</title>
   <style type="text/css">
@@ -35,8 +35,9 @@
 
   </style>
   <script type="text/javascript">
-    window.onload=function(){
-      mapboxgl.accessToken = 'pk.eyJ1Ijoic29jcmF0YSIsImEiOiJjaXJxc2wzam0waGU5ZmZtODhqd2ttamdxIn0.1ZQEByXoDD7fGIa9lUHIqg';
+    window.onload= function() {
+      mapboxgl.accessToken =
+        'pk.eyJ1Ijoic29jcmF0YSIsImEiOiJjaXJxc2wzam0waGU5ZmZtODhqd2ttamdxIn0.1ZQEByXoDD7fGIa9lUHIqg';
       var mapCenter = [-74.50, 40],
         map = new mapboxgl.Map({
           container: 'map',
@@ -138,12 +139,20 @@
         } else if (map.getZoom() < SPIDERFY_FROM_ZOOM) {
           map.easeTo({center: e.lngLat, zoom: map.getZoom() + 2});
         } else {
-          map.getSource('pins').getClusterChildren(features[0].properties.cluster_id, Math.floor(map.getZoom()), true, function(data){
-            var markers = _.map(data.children, function(child){
-              return child.properties;
-            });
-            spiderifier.spiderfy(features[0].geometry.coordinates, markers);
-          });
+          map.getSource('pins').getClusterLeaves(
+            features[0].properties.cluster_id,
+            100,
+            0,
+            function(err, leafFeatures){
+              if (err) {
+                return console.error('error while getting leaves of a cluster', err);
+              }
+              var markers = _.map(leafFeatures, function(leafFeature){
+                return leafFeature.properties;
+              });
+              spiderifier.spiderfy(features[0].geometry.coordinates, markers);
+            }
+          );
         }
       }
 
@@ -153,7 +162,7 @@
         });
         map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
       }
-    }
+    };
   </script>
 </head>
 <body>
