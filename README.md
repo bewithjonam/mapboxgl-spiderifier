@@ -4,6 +4,8 @@ Spiderify markers on mapbox-gl using marker overlays. Note it does not create th
 
 Spiral/Circle positioning logic taken from and credits goes to https://github.com/jawj/OverlappingMarkerSpiderfier.
 
+This repo is a fork of [bewithjonam/mapboxgl-spiderifier](https://github.com/bewithjonam/mapboxgl-spiderifier) that points to [@socrata/mapbox-gl-js](https://github.com/socrata/mapbox-gl-js) instead of upstream.
+
 ## Examples:
  - https://bewithjonam.github.io/mapboxgl-spiderifier/docs/index.html
 
