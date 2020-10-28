@@ -1,8 +1,8 @@
 (function(root, factory) {
   if (typeof exports === 'object' && typeof module !== 'undefined') {
-    module.exports = factory(require('mapbox-gl'));
+    module.exports = factory(require('@socrata/mapbox-gl'));
   } else if (typeof define === 'function' && define.amd) {
-    define(['MapboxglSpiderifier'], factory);
+    define('mapboxgl-spiderifier', ['@socrata/mapbox-gl'], factory);
   } else  {
     root.MapboxglSpiderifier = factory(root.mapboxgl);
   }
