@@ -1,9 +1,12 @@
 {
-  "name": "mapboxgl-spiderifier",
+  "name": "@socrata/mapboxgl-spiderifier",
   "version": "1.0.9",
   "description": "Spiderify markers on mapbox-gl using marker overlays.",
   "main": "index.js",
   "style": "index.css",
+  "publishConfig": {
+    "registry": "https://repo.socrata.com/artifactory/api/npm/npm-local"
+  },
   "directories": {
     "doc": "docs"
   },
@@ -13,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mimio/mapboxgl-spiderifier.git"
+    "url": "git+https://github.com/socrata-platform/mapboxgl-spiderifier.git"
   },
   "keywords": [
     "mapboxgl",
@@ -22,9 +25,9 @@
   "author": "bewithjonam",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mimio/mapboxgl-spiderifier/issues"
+    "url": "https://github.com/bewithjonam/mapboxgl-spiderifier/issues"
   },
-  "homepage": "https://github.com/mimio/mapboxgl-spiderifier#readme",
+  "homepage": "https://github.com/bewithjonam/mapboxgl-spiderifier#readme",
   "devDependencies": {
     "eslint": "^4.19.1"
   }
