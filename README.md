@@ -102,7 +102,7 @@ var spiderifier = new MapboxglSpiderifier(map, {
         offset: MapboxglSpiderifier.popupOffsetForSpiderLeg(spiderLeg)
       });
 
-      popup.setHTML('Feature type is ' + marker.type);
+      popup.setHTML('Feature type is ' + spiderLeg.feature.type);
       spiderLeg.mapboxMarker.setPopup(popup);
 
       $(spiderLeg.elements.container)
