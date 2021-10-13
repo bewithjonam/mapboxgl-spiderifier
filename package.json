@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mimio/mapboxgl-spiderifier.git"
+    "url": "git+https://github.com/bewithjonam/mapboxgl-spiderifier.git"
   },
   "keywords": [
     "mapboxgl",
@@ -22,9 +22,9 @@
   "author": "bewithjonam",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mimio/mapboxgl-spiderifier/issues"
+    "url": "https://github.com/bewithjonam/mapboxgl-spiderifier/issues"
   },
-  "homepage": "https://github.com/mimio/mapboxgl-spiderifier#readme",
+  "homepage": "https://github.com/bewithjonam/mapboxgl-spiderifier#readme",
   "devDependencies": {
     "eslint": "^4.19.1"
   }
