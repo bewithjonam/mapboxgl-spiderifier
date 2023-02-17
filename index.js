@@ -22,6 +22,8 @@
         initializeLeg: NULL_FUNCTION,
         onKeyUp: NULL_FUNCTION,
         onClick: NULL_FUNCTION,
+        onSpiderify: NULL_FUNCTION,
+        onUnspiderify: NULL_FUNCTION,
         // --- <SPIDER TUNING Params>
         // circleSpiralSwitchover: show spiral instead of circle from this marker count upwards
         //                        0 -> always spiral; Infinity -> always circle
@@ -96,6 +98,7 @@
       }
 
       previousSpiderLegs = spiderLegs;
+      options.onSpiderify(previousSpiderLegs)
     }
 
     function unspiderfy() {
@@ -110,6 +113,8 @@
           spiderLeg.mapboxMarker.remove();
         }
       });
+      options.onUnspiderify(previousSpiderLegs)
+
       previousSpiderLegs = [];
     }
 
