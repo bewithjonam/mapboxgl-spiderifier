@@ -49,7 +49,7 @@
     };
 
     // Private:
-    function spiderfy(latLng, features) {
+    function spiderfy(latLng, features, clusterElement = null) {
       var spiderLegParams = generateSpiderLegParams(features.length);
       var spiderLegs;
 
@@ -68,7 +68,8 @@
           feature: feature,
           elements: elements,
           mapboxMarker: mapboxMarker,
-          param: spiderLegParam
+          param: spiderLegParam,
+          clusterElement: clusterElement
         };
 
         options.initializeLeg(spiderLeg);
@@ -98,10 +99,20 @@
       }
 
       previousSpiderLegs = spiderLegs;
+
+      if (clusterElement) {
+        clusterElement.dispatchEvent(
+          new CustomEvent('spiderify', {
+            spiderLegs
+          })
+        )
+      }
+
       options.onSpiderify(previousSpiderLegs)
     }
 
-    function unspiderfy() {
+    function unspiderfy(clusterElement = null) {
+
       util.each(previousSpiderLegs.reverse(), function (spiderLeg, index) {
         if (options.animate) {
           spiderLeg.elements.container.style['transitionDelay'] = ((options.animationSpeed / 1000) / previousSpiderLegs.length * index) + 's';
@@ -113,6 +124,15 @@
           spiderLeg.mapboxMarker.remove();
         }
       });
+
+      if (clusterElement) {
+        clusterElement.dispatchEvent(
+          new CustomEvent('unspiderify', {
+            spiderLegs: spiderLegs,
+          })
+        )
+      }
+
       options.onUnspiderify(previousSpiderLegs)
 
       previousSpiderLegs = [];
