@@ -20,6 +20,7 @@
         animationSpeed: 0, // animation speed in milliseconds
         customPin: false, // If false, sets a default icon for pins in spider legs.
         initializeLeg: NULL_FUNCTION,
+        onKeyUp: NULL_FUNCTION,
         onClick: NULL_FUNCTION,
         // --- <SPIDER TUNING Params>
         // circleSpiralSwitchover: show spiral instead of circle from this marker count upwards
@@ -72,6 +73,10 @@
 
         elements.container.onclick = function (e) {
           options.onClick(e, spiderLeg);
+        };
+
+        elements.container.onkeyup = function (e) {
+          options.onKeyUp(e, spiderLeg);
         };
 
         return spiderLeg;
