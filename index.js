@@ -49,7 +49,7 @@
     };
 
     // Private:
-    function spiderfy(latLng, features, clusterElement = null) {
+    function spiderfy(latLng, features) {
       var spiderLegParams = generateSpiderLegParams(features.length);
       var spiderLegs;
 
@@ -68,8 +68,7 @@
           feature: feature,
           elements: elements,
           mapboxMarker: mapboxMarker,
-          param: spiderLegParam,
-          clusterElement: clusterElement
+          param: spiderLegParam
         };
 
         options.initializeLeg(spiderLeg);
@@ -99,19 +98,10 @@
       }
 
       previousSpiderLegs = spiderLegs;
-
-      if (clusterElement) {
-        clusterElement.dispatchEvent(
-          new CustomEvent('spiderify', {
-            spiderLegs
-          })
-        )
-      }
-
       options.onSpiderify(previousSpiderLegs)
     }
 
-    function unspiderfy(clusterElement = null) {
+    function unspiderfy() {
 
       util.each(previousSpiderLegs.reverse(), function (spiderLeg, index) {
         if (options.animate) {
@@ -125,16 +115,7 @@
         }
       });
 
-      if (clusterElement) {
-        clusterElement.dispatchEvent(
-          new CustomEvent('unspiderify', {
-            spiderLegs: spiderLegs,
-          })
-        )
-      }
-
       options.onUnspiderify(previousSpiderLegs)
-
       previousSpiderLegs = [];
     }
 
