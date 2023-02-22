@@ -2,17 +2,20 @@
 
 Spiderify markers on mapbox-gl using marker overlays. Note it does not create the spiderfication in the canvas but on a overlay on top of the canvas. This uses mapboxgl.Marker to create markers and spider legs.
 
-Spiral/Circle positioning logic taken from and credits goes to https://github.com/jawj/OverlappingMarkerSpiderfier.
+Spiral/Circle positioning logic taken from and credits goes to <https://github.com/jawj/OverlappingMarkerSpiderfier>.
 
-## Examples:
- - https://bewithjonam.github.io/mapboxgl-spiderifier/docs/index.html
+## Examples
 
-## Note:
+- <https://bewithjonam.github.io/mapboxgl-spiderifier/docs/index.html>
+
+## Note
+
 Mapboxgl-js has exposed getClusterLeaves/getClusterChildren (from supercluster) in version [v0.47.0](https://github.com/mapbox/mapbox-gl-js/releases/tag/v0.47.0). Thereby, now we can get the features within a cluster from mapboxgl and spiderfy them using this library.
 
-## Usage:
+## Usage
 
 #### Simple Spiderfication of features
+
 ```js
 var features = [
   {id: 0, type: 'car', color: 'red'},
@@ -29,8 +32,8 @@ var map = new mapboxgl.Map({
   });
 
 var spiderifier = new MapboxglSpiderifier(map, {
-  	onClick: function(e, spiderLeg){
-    	console.log('Clicked on ', spiderLeg);
+   onClick: function(e, spiderLeg){
+     console.log('Clicked on ', spiderLeg);
     },
     markerWidth: 40,
     markerHeight: 40,
@@ -44,8 +47,11 @@ map.on('click', function(){
   spiderifier.unspiderfy();
 });
 ```
+
 ### Getting features in a cluster from mapboxgl and spiderfying them
+
 Refer [Example 3](https://bewithjonam.github.io/mapboxgl-spiderifier/docs/example-mapbox-gl-cluster-spiderfy.html)
+
 ```
 map.on('style.load', function() {
   map.on('click', mouseClick);
@@ -79,7 +85,8 @@ function mouseClick(e) {
 
 ```
 
-#### Custom Pins With popup:
+#### Custom Pins With popup
+
 ```js
 var spiderifier = new MapboxglSpiderifier(map, {
     customPin: true,
@@ -119,27 +126,36 @@ var spiderifier = new MapboxglSpiderifier(map, {
 ## Doc
 
 #### Options
+
 ```js
 new MapboxglSpiderifier(map, options)
 ```
 
   Constructs a mapboxgl spiderifier.
-  - `map` *(mapbox gl map mandatory)*.
-  - `options` *(object optional)*
-    - `options.animate` **(boolean default: false)**
-    - `options.animationSpeed` **(number default: 200)** number in milliseconds (animation speed)
-    - `options.circleSpiralSwitchover` **(number default: 9)** number of markers till which the spider will
-      be circular and beyond this threshold, it will spider in spiral.
-    - `options.customPin` **(boolean default: false)**
-    - `options.initializeLeg` **(function)** function to provide a custom marker/popup for markers
-      - argument1 spiderLeg
-    - `options.onClick` **(function)**
-      - argument1 clickEvent
-      - argument2 spiderLeg
 
+- `map` *(mapbox gl map mandatory)*.
+- `options` *(object optional)*
+  - `options.animate` **(boolean default: false)**
+  - `options.animationSpeed` **(number default: 200)** number in milliseconds (animation speed)
+  - `options.circleSpiralSwitchover` **(number default: 9)** number of markers till which the spider will
+      be circular and beyond this threshold, it will spider in spiral.
+  - `options.customPin` **(boolean default: false)**
+  - `options.initializeLeg` **(function)** function to provide a custom marker/popup for markers
+    - argument1 spiderLeg
+  - `options.onClick` **(function)**
+    - argument1 clickEvent
+    - argument2 spiderLeg
+  - `options.onKeyUp` **(function)**
+    - argument1 keyUpEvent
+    - argument2 spiderLeg
+  - `options.onSpiderify` **(function)**
+    - argument1 spiderLegs (that are being opened)
+  - `options.onUnspiderify` **(function)**
+    - argument1 spiderLegs (that have closed)
 
 **spiderLeg** Passed in options.initializeLeg/options.onClick(callbacks) and in
 spideifier.each (iterator) function.
+
 ```
   {
     feature: <object>,
@@ -159,23 +175,28 @@ spideifier.each (iterator) function.
   }
 ```
 
-#### Functions:
-  - ```each(function(spiderLeg) {...} )``` Iterates over the currently spiderfied legs.
-    -  ```function(spiderLeg)``` Function gets called once for every spider leg.
-  - ```spiderfy(latLng, features)``` Spiderfies and displays given markers on the specified lat lng.
-    - ```latLng```  new mapboxgl.LngLat(-122.420679, 37.772537); OR [-122.420679, 37.772537];
-    - ```features``` array of plain objects.
-  - ```unspiderfy()``` Unspiderfies markers, if any spiderfied already.
+#### Functions
 
-  - ```MapboxglSpiderifier.popupOffsetForSpiderLeg(spiderLeg)``` returns an offset object that can be
+- ```each(function(spiderLeg) {...} )``` Iterates over the currently spiderfied legs.
+  - ```function(spiderLeg)``` Function gets called once for every spider leg.
+- ```spiderfy(latLng, features, clusterElement = null)``` Spiderfies and displays given markers on the specified lat lng.
+  - ```latLng```  new mapboxgl.LngLat(-122.420679, 37.772537); OR [-122.420679, 37.772537];
+  - ```features``` array of plain objects.
+  - ```clusterElement``` DOM element of the cluster that was spiderified.
+- ```unspiderfy(clusterElement = null)``` Unspiderfies markers, if any spiderfied already.
+  - ```clusterElement``` DOM element of the cluster that was spiderified.
+
+- ```MapboxglSpiderifier.popupOffsetForSpiderLeg(spiderLeg)``` returns an offset object that can be
   passed to mapboxgl's popup so that the popup will be positioned next to the pin rather than the center
   of the spider.
 
-## ChangeLog:
+## ChangeLog
 
 1.0.8 -
-  - MapboxglSpiderfier -> MapboxglSpider***i***fier ;)
-  - options.initializeMarker(markerObject) -> options.initializeLeg(spiderLeg)
+
+- MapboxglSpiderfier -> MapboxglSpider***i***fier ;)
+- options.initializeMarker(markerObject) -> options.initializeLeg(spiderLeg)
+
 ```js
   // Old:
   initializeMarker(markerObject) {

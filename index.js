@@ -20,6 +20,7 @@
         animationSpeed: 0, // animation speed in milliseconds
         customPin: false, // If false, sets a default icon for pins in spider legs.
         initializeLeg: NULL_FUNCTION,
+        onKeyUp: NULL_FUNCTION,
         onClick: NULL_FUNCTION,
         // --- <SPIDER TUNING Params>
         // circleSpiralSwitchover: show spiral instead of circle from this marker count upwards
@@ -74,6 +75,10 @@
           options.onClick(e, spiderLeg);
         };
 
+        elements.container.onkeyup = function (e) {
+          options.onKeyUp(e, spiderLeg);
+        };
+
         return spiderLeg;
       });
 
@@ -91,9 +96,12 @@
       }
 
       previousSpiderLegs = spiderLegs;
+      return previousSpiderLegs;
     }
 
     function unspiderfy() {
+      var spiderLegs;
+
       util.each(previousSpiderLegs.reverse(), function (spiderLeg, index) {
         if (options.animate) {
           spiderLeg.elements.container.style['transitionDelay'] = ((options.animationSpeed / 1000) / previousSpiderLegs.length * index) + 's';
@@ -104,8 +112,12 @@
         } else {
           spiderLeg.mapboxMarker.remove();
         }
+
+        spiderLegs.push(spiderLeg)
       });
+
       previousSpiderLegs = [];
+      return spiderLegs;
     }
 
     function generateSpiderLegParams(count) {
